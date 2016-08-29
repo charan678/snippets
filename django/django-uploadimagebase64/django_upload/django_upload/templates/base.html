@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<title>loading image</title>		
+		<script src="{{ STATIC_URL }}js/jquery-2.1.0.min.js"></script>
+		<script>
+
+		$(document).ready(function() {
+			
+			//upload document
+			$('#imagesubmit').on("click",function(e){
+				var $form = $('#uploaddiv #uploadform');
+			  	var json_input = new FormData($form[0]);
+			  	$.ajax({
+			  		url: "/api/v1/upload/",
+		   	        type: 'POST',
+		   	        data: json_input,
+			   	    async: false,
+			   	    cache: false,
+			   	    contentType: false,
+			   	    processData: false,
+					success: function(data){
+						if (data.hasOwnProperty('error')){
+							alert("error occured")
+							return false}
+						else{
+							alert("successfully added");
+						}
+					}
+			   })
+			});
+				
+			//show document
+			$('#showdocument').on("click",function(e){
+				
+			  	$.ajax({
+			  		url: '/upload/getdocument/1/',
+					type: 'GET',
+					contentType: 'application/json',
+					dataType: 'json',
+					success: function(data){
+					if (data.hasOwnProperty('error')){
+							alert("error occured");
+							return false}
+					else{
+						var image = new Image();
+				        //image.src = "data:image/jpg;base64,"+data.image;
+				        image.src = data.image;
+				        var w = window.open("");
+				        w.document.write("<html><body><img src='"+image.src+"'</img></body></html>");
+						
+					
+						}
+					}
+			   });
+			});
+			
+		});
+		</script>
+		 
+	</head>
+	<body>
+		<div id="uploaddiv">
+			<form id='uploadform'>
+				<input type='file'  name='id_image' id='id_image'>
+				<input type="button" id='imagesubmit' value="submit"/>
+				
+		    </form>
+		</div>
+		<a href="#" id="showdocument">Show</a>
+	</body>
+</html>
